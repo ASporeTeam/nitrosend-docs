@@ -87,6 +87,7 @@ export default defineConfig({
               "guides/images-and-gifs",
               "guides/agent-inbox",
               "guides/outreach",
+              "guides/partner-program",
             ],
           },
           {
