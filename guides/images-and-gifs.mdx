@@ -1,6 +1,6 @@
 ---
 title: Images and GIFs
-description: Add images and animated GIFs to your emails
+description: Add images and animated GIFs to your emails from the editor, any connected agent or the API, and turn video into GIFs
 ---
 
 # Images and GIFs
@@ -14,16 +14,67 @@ more than 16 million pixels in total. SVG files are not supported.
 
 ## Animated GIFs
 
-To add an animated GIF, select an Image section and upload the GIF as you would
-any other image. Nitrosend keeps its animation when it hosts the file. You can
-also paste a public GIF link using **Use direct URL**.
+Animated GIFs work everywhere you build email in Nitrosend: in the editor, from
+any connected agent (Claude, ChatGPT, Codex, Cursor, Gemini and other MCP
+clients) and through the REST API. Nitrosend keeps every frame when it hosts
+the file, so the animation reaches the inbox intact, and most email apps play
+it.
 
-If you build the email with an agent, give it a public link to the GIF. It can
-save the image to Nitrosend and use it in the email.
+Motion is one of the quickest ways to make an email feel high end. Think of a
+product turning in the light, a model walking toward the camera, or an
+oversized headline that animates in at the top of a newsletter. Most email
+apps, Gmail and Outlook included, don't play video, so a GIF is how you get
+that video-style motion into an email (see [Video in email](#video-in-email)).
 
-Send yourself a test before sending to your audience. Email apps handle
-animation differently, and some show only the first frame. Put the key message
-in that first frame and add alt text for readers whose images are hidden.
+### In the editor
 
-Keep GIFs small so they load promptly on mobile connections. A width of about
-1,200 pixels is enough for a full-width image in a 600-pixel email.
+Select an Image section and upload the GIF as you would any other image, or
+paste a public GIF link with **Use direct URL**.
+
+### With an agent
+
+Ask your agent to add the GIF to your email. It saves the GIF to Nitrosend with
+`nitro_ingest` and places the hosted link in the email. Your agent can take the
+GIF from:
+
+- a public link to the GIF
+- a GIF you attach to the chat, for example in ChatGPT or Claude
+- a GIF file it already has, such as one it made itself
+
+```text
+Ask your agent: "Using Nitrosend, add this GIF as the hero of my newsletter draft, link it to [URL] and send me a test."
+```
+
+### Have your agent make the GIF
+
+Agents that can run code and work with files, such as Claude Code, Codex and
+Cursor, can build the GIF themselves: an on-brand headline that animates in, a
+product that rotates, or a short loop cut from your own footage. If your agent
+can't create the file in your chat, make the GIF with any GIF maker, then
+attach it or share a link.
+
+```text
+Ask your agent: "Using Nitrosend, design a newsletter including a hero, a portrait-shaped GIF, with an on-brand oversized animated headline inside the GIF. Send me a test before anything goes to my list."
+```
+
+### Video in email
+
+Most email apps, Gmail and Outlook included, don't play video, so Nitrosend
+doesn't accept MP4 or other video files. Turn a few seconds of the clip into a
+GIF instead and link it to the full video online. Readers get motion in the
+email itself and can watch the rest in one click.
+
+## Getting GIFs right
+
+- **Make the first frame work on its own.** Some email apps and settings,
+  including older versions of Outlook for Windows, show only the first frame.
+  Start on the finished headline or your strongest still, then let the
+  animation play.
+- **Keep files light.** Aim for under 2 MB so the GIF loads quickly on phones.
+  Fewer colors, fewer frames and a shorter loop all help.
+- **Size for the layout.** A portrait GIF around 600 by 750 pixels (4:5) fills
+  a 600-pixel email and stays light. Full-width heroes can go up to about
+  1,200 pixels wide for sharp screens.
+- **Add alt text** that describes what the GIF shows, for readers whose images
+  are hidden.
+- **Send yourself a test** before sending to your audience.

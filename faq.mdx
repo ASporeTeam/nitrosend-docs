@@ -187,10 +187,17 @@ Run the scan again (logos on some sites take a second attempt) or edit any field
 Email apps can display colours differently in dark mode, so test your email in the apps and on the devices your audience uses. Choose a logo that remains readable on both light and dark backgrounds. You can set a logo for an individual email in its Header section.
 
 ### Can I use GIFs in my emails?
-Yes, host the GIF on your website or another image host, then open the editor's Image section, choose Use direct URL and paste the `.gif` link. If your agent is building the email, have it use a still image that you can replace with the GIF in the editor. Aim for about 600 pixels wide and under 1 MB. Put the key message in the first frame so it is visible in email apps that do not play the animation.
+Yes. Animated GIFs work from the editor, from any connected agent (Claude, ChatGPT, Codex, Cursor and other MCP clients) and through the API, and Nitrosend keeps the animation when it hosts them. A moving hero, like an oversized headline that animates in or a product in motion, is one of the easiest ways to make an email look high end. Give your agent a public GIF link, attach the GIF in your chat, or ask an agent that can run code to make one. Put the key message in the first frame, because a few email apps and settings show only that frame. More in [Images and GIFs](/guides/images-and-gifs).
 
 ```text
-Ask your agent: "Build this Nitrosend email with a still image and tell me which Image section to replace with my hosted GIF in the editor."
+Ask your agent: "Using Nitrosend, design a newsletter including a hero, a portrait-shaped GIF, with an on-brand oversized animated headline inside the GIF. Send me a test before anything goes to my list."
+```
+
+### Can I put a video in my email?
+Most email apps, Gmail and Outlook included, don't play video, so Nitrosend doesn't accept MP4 or other video files. Turn a few seconds of the clip into a GIF and link it to the full video online: readers get motion in the email itself and can watch the rest in one click. An agent that can run code can make the GIF from your clip; otherwise use any GIF maker and attach the result.
+
+```text
+Ask your agent: "Using Nitrosend, make a short GIF from [video], use it as my newsletter hero, link it to the full video and send me a test."
 ```
 
 ## Sends that pause, hold or stall
