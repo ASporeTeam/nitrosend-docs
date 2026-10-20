@@ -1,7 +1,8 @@
-import { defineConfig } from "sourcey";
+import { defineConfig, markdown, mcp, openapi } from "sourcey";
 
 export default defineConfig({
   name: "Nitrosend",
+  siteUrl: "https://docs.nitrosend.com",
   prettyUrls: "strip",
   theme: {
     colors: {
@@ -26,116 +27,119 @@ export default defineConfig({
       {
         tab: "Documentation",
         slug: "",
-        groups: [
-          {
-            group: "Getting Started",
-            pages: ["introduction", "quickstart", "agent-onboarding", "authentication", "pricing", "faq"],
-          },
-          {
-            group: "MCP Integrations",
-            pages: [
-              "integrations/overview",
-              "integrations/claude-desktop",
-              "integrations/claude-cowork",
-              "integrations/claude-code",
-              "integrations/cursor",
-              "integrations/chatgpt",
-              "integrations/codex",
-              "integrations/gemini",
-              "integrations/vscode",
-              "integrations/windsurf",
-              "integrations/zed",
-              "integrations/mcp-brand-kit-memory",
-            ],
-          },
-          {
-            group: "API Integrations",
-            pages: ["integrations/rest-api", "integrations/events-api", "integrations/webhooks", "integrations/api-reference", "cli/overview", "integrations/vercel-ai-sdk", "integrations/vercel-marketplace", "integrations/stripe-projects", "integrations/aws-marketplace"],
-          },
-          {
-            group: "Email Providers",
-            pages: [
-              "integrations/email-providers",
-              "integrations/sendgrid",
-              "integrations/postmark",
-              "integrations/resend",
-              "integrations/mailgun",
-              "integrations/ses",
-            ],
-          },
-          {
-            group: "Data & Commerce",
-            pages: [
-              "integrations/mailchimp",
-              "integrations/attio",
-              "integrations/hubspot",
-              "integrations/shopify",
-              "integrations/stripe",
-            ],
-          },
-          {
-            group: "Guides",
-            pages: [
-              "guides/agent-payments",
-              "guides/mcp-examples",
-              "guides/sending-emails",
-              "guides/sending-domains",
-              "guides/managing-contacts",
-              "guides/website-signup-forms",
-              "guides/building-flows",
-              "guides/creating-campaigns",
-              "guides/images-and-gifs",
-              "guides/agent-inbox",
-            ],
-          },
-          {
-            group: "Concepts",
-            pages: [
-              "concepts/glossary",
-              "concepts/dashboard-urls",
-              "concepts/payment-lifecycle",
-              "concepts/contacts",
-              "concepts/templates",
-              "concepts/flows",
-              "concepts/campaigns",
-              "concepts/segments",
-              "concepts/agent-inbox",
-            ],
-          },
-        ],
+        source: markdown({
+          groups: [
+            {
+              group: "Getting Started",
+              pages: ["introduction", "quickstart", "agent-onboarding", "authentication", "pricing", "faq"],
+            },
+            {
+              group: "MCP Integrations",
+              pages: [
+                "integrations/overview",
+                "integrations/claude-desktop",
+                "integrations/claude-cowork",
+                "integrations/claude-code",
+                "integrations/cursor",
+                "integrations/chatgpt",
+                "integrations/codex",
+                "integrations/gemini",
+                "integrations/vscode",
+                "integrations/windsurf",
+                "integrations/zed",
+                "integrations/mcp-brand-kit-memory",
+              ],
+            },
+            {
+              group: "API Integrations",
+              pages: ["integrations/rest-api", "integrations/events-api", "integrations/webhooks", "integrations/api-reference", { page: "cli/overview", tab: "cli" }, "integrations/vercel-ai-sdk", "integrations/vercel-marketplace", "integrations/stripe-projects", "integrations/aws-marketplace"],
+            },
+            {
+              group: "Email Providers",
+              pages: [
+                "integrations/email-providers",
+                "integrations/sendgrid",
+                "integrations/postmark",
+                "integrations/resend",
+                "integrations/mailgun",
+                "integrations/ses",
+              ],
+            },
+            {
+              group: "Data & Commerce",
+              pages: [
+                "integrations/mailchimp",
+                "integrations/attio",
+                "integrations/hubspot",
+                "integrations/shopify",
+                "integrations/stripe",
+              ],
+            },
+            {
+              group: "Guides",
+              pages: [
+                "guides/agent-payments",
+                "guides/mcp-examples",
+                "guides/sending-emails",
+                "guides/sending-domains",
+                "guides/managing-contacts",
+                "guides/website-signup-forms",
+                "guides/building-flows",
+                "guides/creating-campaigns",
+                "guides/images-and-gifs",
+                "guides/agent-inbox",
+              ],
+            },
+            {
+              group: "Concepts",
+              pages: [
+                "concepts/glossary",
+                "concepts/dashboard-urls",
+                "concepts/payment-lifecycle",
+                "concepts/contacts",
+                "concepts/templates",
+                "concepts/flows",
+                "concepts/campaigns",
+                "concepts/segments",
+                "concepts/agent-inbox",
+              ],
+            },
+          ],
+        }),
       },
       {
         tab: "MCP Tools",
         slug: "mcp",
-        mcp: "./nitrosend.mcp.json",
+        source: mcp("./nitrosend.mcp.json"),
       },
       {
         tab: "CLI",
         slug: "cli",
-        groups: [
-          {
-            group: "Get Started",
-            pages: ["cli/overview", "cli/install"],
-          },
-          {
-            group: "Operating",
-            pages: ["cli/agent-mode", "cli/project-config", "cli/recipes"],
-          },
-          {
-            group: "Reference",
-            pages: ["cli/reference"],
-          },
-        ],
+        source: markdown({
+          groups: [
+            {
+              group: "Get Started",
+              pages: ["cli/overview", "cli/install"],
+            },
+            {
+              group: "Operating",
+              pages: ["cli/agent-mode", "cli/project-config", "cli/recipes"],
+            },
+            {
+              group: "Reference",
+              pages: ["cli/reference"],
+            },
+          ],
+        }),
       },
       {
         tab: "API Reference",
         slug: "api",
-        openapi: process.env.NITROSEND_OPENAPI_SOURCE || "https://api.nitrosend.com/openapi.yaml",
+        source: openapi(process.env.NITROSEND_OPENAPI_SOURCE || "https://api.nitrosend.com/openapi.yaml"),
       },
     ],
   },
   navbar: {
-    links: [],
     primary: {
       type: "button",
       label: "Dashboard",
@@ -147,9 +151,4 @@ export default defineConfig({
       { type: "github", href: "https://github.com/nitrosend" },
     ],
   },
-  redirects: [
-    { source: "/api", destination: "/api-reference" },
-    { source: "/mcp", destination: "/integrations/overview" },
-    { source: "/sdk", destination: "/integrations/rest-api" },
-  ],
 });

@@ -3,5 +3,17 @@
   "outputDirectory": "dist",
   "installCommand": "npm install",
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/introduction",
+      "permanent": false
+    },
+    {
+      "source": "/api-reference",
+      "destination": "/api",
+      "permanent": true
+    }
+  ]
 }
