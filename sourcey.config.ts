@@ -86,7 +86,6 @@ export default defineConfig({
               "guides/creating-campaigns",
               "guides/images-and-gifs",
               "guides/agent-inbox",
-              "guides/outreach",
             ],
           },
           {
@@ -101,7 +100,6 @@ export default defineConfig({
               "concepts/campaigns",
               "concepts/segments",
               "concepts/agent-inbox",
-              "concepts/outreach",
             ],
           },
         ],
@@ -132,7 +130,7 @@ export default defineConfig({
       {
         tab: "API Reference",
         slug: "api",
-        openapi: "https://api.nitrosend.com/openapi.yaml",
+        openapi: process.env.NITROSEND_OPENAPI_SOURCE || "https://api.nitrosend.com/openapi.yaml",
       },
     ],
   },

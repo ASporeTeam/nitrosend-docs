@@ -113,11 +113,11 @@
               "history",
               "products"
             ],
-            "description": "Which entity type to query. Use nitro_search_contacts for full-text contact search."
+            "description": "Contact full text: nitro_search_contacts."
           },
           "filters": {
             "type": "object",
-            "description": "Entity filters: flows status/campaign_id/trigger_event/search; campaigns status/search; templates subject; segments/lists name; contacts query/subscribed_email/subscribed_phone/list_id; events name/from/to; imports status; messages channel/status/to; suppressions email/reason/source_provider/active; history source/event_type/tool/actor/correlation_id/resource_uri/from/to; products status/query. All support integer id."
+            "description": "Filters: flows status/campaign_id/trigger_event/search; campaigns status/search; templates subject; segments/lists name; contacts query/subscribed_email/subscribed_phone/list_id; events name/from/to; imports status; messages channel/status/to; suppressions email/reason/source_provider/active; history source/event_type/tool/actor/correlation_id/resource_uri/from/to; products status/query; all id."
           },
           "page": {
             "type": "integer",
@@ -370,7 +370,7 @@
     },
     {
       "name": "nitro_manage_audience",
-      "description": "Create or update contacts, manage subscriptions, lists, events, segments, tags, and explicit prepaid email validation. Custom contact fields belong in attributes.data. For more than 100 contact writes, use nitro_import_contacts with CSV.",
+      "description": "Manage contacts, subscriptions, lists, events, segments, tags and prepaid email validation. Custom fields: attributes.data. Over 100 contacts: nitro_import_contacts.",
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
@@ -384,23 +384,24 @@
               "manage_list",
               "record_event",
               "delete_segment",
+              "delete_contacts",
               "bulk_tag",
               "validate"
             ],
-            "description": "Choose one audience operation. validate accepts exactly one of contact_channel_ids, contact_ids, list_id, segment_id, or all_contacts: true. Dry-run quotes without mutation; pass its quote_digest on execution to refuse audience or price drift. Execution needs idempotency_key and prepaid funds. Deletion needs confirm."
+            "description": "delete_contacts: one of list_id, segment_id, contact_ids. validate accepts exactly one of contact_channel_ids, contact_ids, list_id, segment_id, or all_contacts: true. Dry-run quotes without mutation; pass its quote_digest on execution to refuse audience or price drift. Execution needs idempotency_key and prepaid funds."
           },
           "params": {
             "type": "object",
-            "description": "Parameters named by operation. Contact custom fields belong in attributes.data. bulk_tag tag_action: add|remove|set (default add)."
+            "description": "Parameters named by operation. bulk_tag tag_action: add|remove|set (default add). set_subscription suppress: true stops all email incl. transactional; false lifts it."
           },
           "dry_run": {
             "type": "boolean",
-            "description": "Preview changes without persisting (default: false)",
+            "description": "Preview changes without persisting",
             "default": false
           },
           "confirm": {
             "type": "boolean",
-            "description": "Required for destructive operations: delete_segment, manage_list with action='delete'",
+            "description": "Required for delete_segment, delete_contacts, manage_list delete",
             "default": false
           },
           "idempotency_key": {
@@ -420,224 +421,6 @@
         "openWorldHint": true,
         "readOnlyHint": false,
         "title": "Manage audience"
-      }
-    },
-    {
-      "name": "nitro_manage_outreach",
-      "description": "Discover named people for outreach: intent, estimate, then start. Companies are evidence, never recipients. start requires the quoted USD-cent spend cap and idempotency key.",
-      "inputSchema": {
-        "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "type": "object",
-        "required": [
-          "action"
-        ],
-        "properties": {
-          "action": {
-            "type": "string",
-            "enum": [
-              "intent",
-              "estimate",
-              "start",
-              "status",
-              "pause",
-              "resume",
-              "cancel"
-            ]
-          },
-          "goal": {
-            "type": "string",
-            "description": "Outreach objective for intent."
-          },
-          "name": {
-            "type": "string",
-            "description": "Required for start."
-          },
-          "target_profile": {
-            "type": "object",
-            "required": [
-              "criteria"
-            ],
-            "properties": {
-              "criteria": {
-                "type": "array",
-                "minItems": 1,
-                "items": {
-                  "type": "object",
-                  "required": [
-                    "field"
-                  ],
-                  "properties": {
-                    "key": {
-                      "type": "string"
-                    },
-                    "subject": {
-                      "type": "string",
-                      "enum": [
-                        "prospect",
-                        "company",
-                        "signal"
-                      ],
-                      "default": "prospect"
-                    },
-                    "field": {
-                      "type": "string",
-                      "description": "Canonical person, company, or signal field."
-                    },
-                    "operator": {
-                      "type": "string",
-                      "enum": [
-                        "equals",
-                        "includes",
-                        "includes_any",
-                        "in",
-                        "range",
-                        "present"
-                      ],
-                      "default": "equals"
-                    },
-                    "value": {
-                      "description": "Scalar, list, or range; omit for present."
-                    },
-                    "required": {
-                      "type": "boolean",
-                      "default": false,
-                      "description": "Unknown/mismatch prevents a match."
-                    },
-                    "weight": {
-                      "type": "number",
-                      "default": 1.0
-                    },
-                    "minimum_confidence": {
-                      "type": "number",
-                      "minimum": 0,
-                      "maximum": 1,
-                      "default": 0
-                    },
-                    "maximum_age_days": {
-                      "type": "integer",
-                      "minimum": 1
-                    }
-                  },
-                  "additionalProperties": false
-                }
-              }
-            },
-            "additionalProperties": false
-          },
-          "capabilities": {
-            "type": "array",
-            "uniqueItems": true,
-            "items": {
-              "type": "string",
-              "enum": [
-                "professional_profiles",
-                "connected_profiles",
-                "community_signals",
-                "hiring_activity"
-              ]
-            },
-            "description": "Requested intent capabilities; required capabilities remain included."
-          },
-          "seeds": {
-            "type": "array",
-            "maxItems": 100,
-            "description": "Up to 100 first-party person/company seeds.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "domain": {
-                  "type": "string"
-                },
-                "website_url": {
-                  "type": "string"
-                },
-                "careers_url": {
-                  "type": "string"
-                },
-                "company_name": {
-                  "type": "string"
-                },
-                "first_name": {
-                  "type": "string"
-                },
-                "last_name": {
-                  "type": "string"
-                },
-                "linkedin_url": {
-                  "type": "string"
-                },
-                "source_record_id": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": false
-            }
-          },
-          "seed_artifacts": {
-            "type": "array",
-            "maxItems": 5,
-            "description": "Uploaded CSV seed manifests.",
-            "items": {
-              "type": "object",
-              "required": [
-                "signed_id"
-              ],
-              "properties": {
-                "signed_id": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": false
-            }
-          },
-          "exclusions": {
-            "type": "object",
-            "description": "Campaign company exclusions; brand suppressions always apply.",
-            "properties": {
-              "company_domains": {
-                "type": "array",
-                "maxItems": 100,
-                "uniqueItems": true,
-                "items": {
-                  "type": "string"
-                }
-              }
-            },
-            "additionalProperties": false
-          },
-          "target_count": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 1000,
-            "description": "Qualified-person limit."
-          },
-          "maximum_spend_cents": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "Authorized USD-cent cap from estimate."
-          },
-          "campaign_id": {
-            "type": "integer",
-            "description": "Required for status or control."
-          },
-          "brand_context_ref": {
-            "type": "string",
-            "description": "Current ref returned by intent."
-          },
-          "idempotency_key": {
-            "type": "string",
-            "maxLength": 128,
-            "description": "Required for start; reuse only for an exact retry."
-          }
-        },
-        "additionalProperties": false
-      },
-      "annotations": {
-        "destructiveHint": true,
-        "idempotentHint": false,
-        "openWorldHint": true,
-        "readOnlyHint": false,
-        "title": "Manage outreach discovery"
       }
     },
     {
@@ -806,14 +589,13 @@
     },
     {
       "name": "nitro_import_contacts",
-      "description": "Inline: max 100 contacts; large lists: CSV upload/finalize. Account-standing row/file limits: status guardrail (standing, max_rows) or GET /v1/my/imports/spec. Inline, opt_in omitted: new email contacts subscribe both channels; phone-only stay unsubscribed. Default CSV: new contacts subscribe both channels. In both cases, existing contacts keep subscriptions; added email subscribes, added phone does not.",
+      "description": "Inline max 100 contacts returns contact_ids. CSV upload/finalize; contact list read-back requires options.list_ids. Limits: status guardrail or GET /v1/my/imports/spec. New contacts with email subscribe both channels; phone-only do not. Existing subscriptions stay unchanged; added email subscribes, added phone does not.",
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
           "records": {
             "type": "array",
-            "description": "Up to 100 contacts; use data for custom fields.",
             "items": {
               "type": "object",
               "properties": {
@@ -852,11 +634,11 @@
           },
           "signed_id": {
             "type": "string",
-            "description": "signed_id returned after the reserved CSV upload PUT."
+            "description": "Uploaded CSV signed ID."
           },
           "upload": {
             "type": "object",
-            "description": "Reserve a CSV upload; PUT bytes, then process its signed_id.",
+            "description": "Reserve upload; PUT CSV; finalize signed_id.",
             "required": [
               "filename",
               "byte_size",
@@ -882,7 +664,11 @@
           },
           "resource": {
             "type": "string",
-            "default": "contacts"
+            "enum": [
+              "contacts"
+            ],
+            "default": "contacts",
+            "description": "Inline contacts or CSV contacts."
           },
           "parser": {
             "type": "string",
@@ -923,7 +709,7 @@
     },
     {
       "name": "nitro_manage_template",
-      "description": "Create, edit, or clone a reusable email template. For a creative design, start with composition_mode=intent and follow its exact next_call. Exact edits use template_id, section_updates, and if_version; based_on clones. Use nitro_compose_campaign for broadcasts.",
+      "description": "Create/edit reusable email templates; based_on clones. Creative work: composition_mode=intent, follow exact next_call. Exact edits: template_id, section_updates, if_version. Broadcasts: nitro_compose_campaign.",
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
@@ -1102,7 +888,15 @@
           },
           "body": {
             "type": "string",
-            "description": "Plain-text alternative for custom mode."
+            "description": "Author text (plain) or custom text alternative (designed)."
+          },
+          "content_format": {
+            "type": "string",
+            "enum": [
+              "designed",
+              "plain"
+            ],
+            "description": "Match source."
           },
           "plain_text_mode": {
             "type": "string",
@@ -1110,7 +904,7 @@
               "derived",
               "custom"
             ],
-            "description": "Whether plain text is derived or custom."
+            "description": "Text provenance."
           },
           "from_name": {
             "type": "string"
@@ -1145,7 +939,7 @@
           "idempotency_key": {
             "type": "string",
             "maxLength": 128,
-            "description": "Required for non-dry-run persistence; reuse only for an exact retry."
+            "description": "Required for non-dry-run persistence; exact retry only."
           }
         },
         "additionalProperties": false
@@ -1160,7 +954,7 @@
     },
     {
       "name": "nitro_compose_flow",
-      "description": "Create or edit an inactive automation draft. For creative email, call composition_mode=intent and follow its exact next_call. replace needs flow_id, confirm, and the draft revision; patch preserves other nodes. Activate with nitro_control_delivery.",
+      "description": "Draft inactive automations. Creative email: composition_mode=intent, follow exact next_call. replace needs flow_id+confirm+draft revision; patch preserves other nodes. Activate: nitro_control_delivery.",
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
@@ -1308,13 +1102,21 @@
               "body": {
                 "type": "string"
               },
+              "content_format": {
+                "type": "string",
+                "enum": [
+                  "designed",
+                  "plain"
+                ],
+                "description": "Match source."
+              },
               "plain_text_mode": {
                 "type": "string",
                 "enum": [
                   "derived",
                   "custom"
                 ],
-                "description": "Whether plain text is derived or custom."
+                "description": "Text provenance."
               },
               "preheader": {
                 "type": "string"
@@ -1432,7 +1234,7 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "Flow name; required when creating."
+            "description": "Flow name; required on create."
           },
           "mode": {
             "type": "string",
@@ -1633,7 +1435,7 @@
           "idempotency_key": {
             "type": "string",
             "maxLength": 128,
-            "description": "Required for non-dry-run persistence; reuse only for an exact retry."
+            "description": "Required for non-dry-run persistence; exact retry only."
           },
           "confirm": {
             "type": "boolean",
@@ -1652,7 +1454,7 @@
     },
     {
       "name": "nitro_compose_campaign",
-      "description": "Create or edit an email/SMS broadcast draft; never delivers it. For creative email, start with composition_mode=intent and follow its exact next_call. patch preserves omitted fields; replace requires campaign_id and confirm, and clears omitted audience or schedule. Use nitro_compose_flow for automation and nitro_send_message for transactional mail.",
+      "description": "Draft email/SMS broadcasts; never sends. Creative email: composition_mode=intent, follow exact next_call. patch preserves omissions; replace needs campaign_id+confirm, clears omitted audience/schedule. Automation: nitro_compose_flow. Transactional: nitro_send_message.",
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
@@ -1695,8 +1497,7 @@
               "welcome",
               "reengagement",
               "transactional",
-              "plain",
-              "outreach"
+              "plain"
             ],
             "description": "Email job used to select a baseline."
           },
@@ -1819,13 +1620,21 @@
           "body": {
             "type": "string"
           },
+          "content_format": {
+            "type": "string",
+            "enum": [
+              "designed",
+              "plain"
+            ],
+            "description": "Match source."
+          },
           "plain_text_mode": {
             "type": "string",
             "enum": [
               "derived",
               "custom"
             ],
-            "description": "Whether plain text is derived or custom."
+            "description": "Text provenance."
           },
           "sections": {
             "type": "array",
@@ -1899,7 +1708,7 @@
           "idempotency_key": {
             "type": "string",
             "maxLength": 128,
-            "description": "Required for non-dry-run persistence; reuse only for an exact retry."
+            "description": "Required for non-dry-run persistence; exact retry only."
           },
           "confirm": {
             "type": "boolean",
@@ -1934,7 +1743,7 @@
               "list",
               "remove"
             ],
-            "description": "prepare_brand_subdomain reserves the subdomain if missing, then the sender; idempotent.\nselect_brand_subdomain selects a ready sender with optional local_part and apex.\nadd registers a customer domain and returns required DNS records.\nverify checks provider and DNS readiness. check_dns diagnoses DNS and tracking HTTPS only.\nlist returns domains, readiness, records, DMARC, and allowance use.\nremove requires domain_name and confirm; retry paired removal with unpair after showing its effect."
+            "description": "prepare_brand_subdomain reserves params.subdomain (or a Brand Kit-derived name), then the sender; idempotent.\nselect_brand_subdomain selects a ready sender with optional local_part and apex.\nadd registers a customer domain and returns required DNS records.\nverify checks provider and DNS readiness. check_dns diagnoses DNS and tracking HTTPS only.\nlist returns domains, readiness, records, DMARC, and allowance use.\nremove requires domain_name and confirm; retry paired removal with unpair after showing its effect."
           },
           "params": {
             "type": "object",
@@ -1948,13 +1757,17 @@
                 "type": "string",
                 "description": "Optional aligned visible From domain for Nitrosend SES."
               },
+              "subdomain": {
+                "type": "string",
+                "description": "Sender name; needs no Brand Kit."
+              },
               "local_part": {
                 "type": "string",
-                "description": "Optional brand-subdomain From local part."
+                "description": "Optional From local part."
               },
               "apex": {
                 "type": "string",
-                "description": "Optional active Nitrosend sending apex."
+                "description": "Optional sending apex."
               },
               "unpair": {
                 "type": "boolean",
@@ -1965,7 +1778,7 @@
           },
           "confirm": {
             "type": "boolean",
-            "description": "Required for remove operation (destructive)",
+            "description": "Required for remove.",
             "default": false
           }
         },
@@ -2296,7 +2109,7 @@
     },
     {
       "name": "nitro_configure_providers",
-      "description": "Configure BYO email provider credentials or check provider status.",
+      "description": "Configure API-key email providers or check connection status.",
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
@@ -2400,7 +2213,7 @@
     },
     {
       "name": "nitro_manage_billing",
-      "description": "Read billing/plans, create operator-approved subscription or add-funds checkout URLs, and poll status. Add-funds behavior depends on the selected instrument: current live instruments return operator approval URLs, and no live presented-credential rail is enabled. Prepaid balance is separate from plans.",
+      "description": "Read enabled account features and supported plans. payment_methods reads current cards. Checkout/add_funds require operator approval; poll afterward. Prepaid funds are separate; no live presented-credential rail is enabled.",
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
@@ -2409,21 +2222,28 @@
             "type": "string",
             "enum": [
               "status",
+              "features",
+              "payment_methods",
               "checkout",
               "checkout_status",
               "plans",
               "add_funds",
               "funding_purchase_status"
             ],
-            "description": "Billing operation. Start with status; use plans/checkout for subscriptions and add_funds/funding_purchase_status for prepaid balance."
+            "description": "Start with status or features."
           },
           "params": {
             "type": "object",
-            "description": "Operation parameters: checkout requires plan_id and may require confirm; checkout_status accepts its plan purchase_id; add_funds requires amount_cents and currency; funding_purchase_status requires its funding purchase_id.",
+            "description": "Parameters for the selected operation.",
             "properties": {
               "plan_id": {
                 "type": "integer",
                 "description": "Plan ID (required for checkout)"
+              },
+              "product_key": {
+                "type": "string",
+                "default": "base_plan",
+                "description": "Subscription product returned by features; omit for the base plan."
               },
               "confirm": {
                 "type": "boolean",
@@ -3019,6 +2839,18 @@
       "uri": "nitro://fields",
       "name": "fields",
       "description": "Per-account contact field catalog grouped by category (contact, custom, enrichment, engagement, tag). Each entry includes key, category, field_type, label, promoted flag, and fill_rate (percentage of contacts with a value, null when not yet computed). Read this for field and segment-filter inspection. The authoring intent's merge grammar is authoritative for recipient-copy bindings; field-catalog membership alone does not make an entry safe or portable email content."
+    },
+    {
+      "uri": "ui://nitrosend/email-preview/v2.1.2.html",
+      "name": "email-preview",
+      "description": "Inline preview of a composed email: subject line plus the rendered message.",
+      "mimeType": "text/html;profile=mcp-app"
+    },
+    {
+      "uri": "ui://nitrosend/campaign-review/v2.1.2.html",
+      "name": "campaign-review",
+      "description": "Interactive delivery review: rendered email, audience, validation and spam state, with approve, request-changes, and test-send actions.",
+      "mimeType": "text/html;profile=mcp-app"
     }
   ],
   "resourceTemplates": [
@@ -3026,11 +2858,6 @@
       "uriTemplate": "nitro://authoring-context/{ref}{?cursor}",
       "name": "authoring-context",
       "description": "Lossless paged read of the exact canonical brand authoring packet named by a composition contract. Start at its supplied ref URI, follow each exact next_uri, concatenate chunk.text in offset order, and verify packet_digest before filling that contract's draft call. A stale ref never returns current content under the old address."
-    },
-    {
-      "uriTemplate": "nitro://outreach/campaigns/{campaign_id}",
-      "name": "outreach-campaign",
-      "description": "Bounded discovery-campaign detail: target profile, criterion coverage, spend budgets, funnel counters, source progress, degradation, and activation-ready inventory. Use nitro_manage_outreach for intent, estimate, start, pause, resume, cancel, and summary status."
     },
     {
       "uriTemplate": "nitro://knowledge/{slug}",
