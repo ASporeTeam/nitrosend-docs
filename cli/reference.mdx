@@ -27,8 +27,15 @@ This page is generated from `COMMAND_DESCRIPTORS` in the CLI repo. Every command
 |---|---|
 | `nitrosend login` | Authenticate with OAuth in the browser. |
 | `nitrosend login --api-key <key>` | Store an API-key profile. |
+| `nitrosend signup --email <email> --password-stdin` | Create an account without a browser and store an API-key profile for it. The password is read from stdin. |
 | `nitrosend logout` | Remove the active local profile. |
 | `nitrosend whoami` | Show active auth source, profile, and API endpoint. |
+
+## Messages
+
+| Command | Summary |
+|---|---|
+| `nitrosend send --to <recipient> --subject <text> --body <text>` | Send one email, or an SMS with `--channel sms`, through `nitro_send_message`. Takes `--template-id`, `--idempotency-key` and `--dry-run`. |
 
 ## MCP
 
