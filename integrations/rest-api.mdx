@@ -202,9 +202,11 @@ Reserved provider headers and reserved Nitrosend tag keys are rejected. System
 tags such as `account_id`, `brand_id`, and `message_id` are always controlled by
 Nitrosend.
 
-Pass an `Idempotency-Key` header on retries. Reusing the same key with the same
-payload returns the original message. Reusing the key with a different payload
-returns `409 idempotency_conflict`.
+Every send requires an idempotency key, in the `Idempotency-Key` header or the
+`idempotency_key` field; without one the request returns
+`400 idempotency_key_required`. Give each message its own stable key and reuse
+it only to retry that message: the same key with the same payload returns the
+original message, and with a different payload returns `409 idempotency_conflict`.
 
 To learn what happened to a message after it is accepted (sent, delivered,
 bounced, failed and more) without polling, register a

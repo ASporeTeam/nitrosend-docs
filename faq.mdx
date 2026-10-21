@@ -138,7 +138,7 @@ Ask your agent: "Check that my Nitrosend transactional template is approved and 
 ```
 
 ### How should I use idempotency keys for transactional sends?
-Give each logical send a stable key using the `Idempotency-Key` header or the `idempotency_key` body field on `POST /v1/my/messages`. Reuse that key when retrying the same send with the same payload. Reusing it with a different payload returns `409 idempotency_conflict`.
+Every send on `POST /v1/my/messages` requires one: give each logical send a stable key using the `Idempotency-Key` header or the `idempotency_key` body field. Reuse that key when retrying the same send with the same payload. Reusing it with a different payload returns `409 idempotency_conflict`.
 
 ```text
 Ask your agent: "Add one stable idempotency key per logical Nitrosend send, reuse it for retries of that send and handle 409 idempotency_conflict."
