@@ -138,7 +138,7 @@ Ask your agent: "Check that my Nitrosend transactional template is approved and 
 ```
 
 ### How should I use idempotency keys for transactional sends?
-Give each logical send a stable key using the `Idempotency-Key` header or the `idempotency_key` body field on `POST /v1/my/messages`. Reuse that key when retrying the same send with the same payload. Reusing it with a different payload returns `409 idempotency_conflict`.
+Every send on `POST /v1/my/messages` requires one: give each logical send a stable key using the `Idempotency-Key` header or the `idempotency_key` body field. Reuse that key when retrying the same send with the same payload. Reusing it with a different payload returns `409 idempotency_conflict`.
 
 ```text
 Ask your agent: "Add one stable idempotency key per logical Nitrosend send, reuse it for retries of that send and handle 409 idempotency_conflict."
@@ -146,9 +146,6 @@ Ask your agent: "Add one stable idempotency key per logical Nitrosend send, reus
 
 ### How do I check my plan after upgrading?
 Sign out and back in to refresh your account view after upgrading. If the displayed plan still does not match your purchase, contact support with your account email.
-
-### Does Nitrosend do cold outreach?
-Yes, through Outreach, our outbound feature, which is in private beta: join the waitlist from Outreach in the app ([how Outreach works](/concepts/outreach)). Campaigns and flows are for people who have opted in to hear from you, so cold email goes through Outreach only. Every outreach send must comply with the laws that cover your recipients, including GDPR, CAN-SPAM and the Australian Spam Act: contact people only where those laws allow it, say who you are, include a working unsubscribe link and honour every opt-out. Verify your list before the first send and start small.
 
 ### Can I still use the visual editor?
 Yes, properly. Campaigns have a full WYSIWYG editor, flows have a visual builder with branching, and everything your agent creates is editable there. Plenty of customers drive with the agent and finish by hand, or skip the agent entirely for a given job. Both are first-class.
@@ -287,7 +284,7 @@ Yes, add team members in Settings, Team. Multiple seats are part of the paid pla
 Use the Clients page to create the client's account, and ask support if you need access to that page. Build their brand kit, domain and flows before choosing Invite owner to invite them. The client owns and pays for the account and can remove your access at any time. Choose Release when your work ends. Give clients who need their own login a separate account, because team members invited to your agency account can see all its brands.
 
 ### How do I add another brand?
-Open the dashboard's brand switcher and choose Add brand, then enter the website to build its Brand Kit. Once created, your agent can select the brand and configure its domain and sender. With an API key, the REST API supports creation through `POST /v1/my/brands`, renaming through `PATCH /v1/my/brands/{sid}` and archiving through `DELETE /v1/my/brands/{sid}`. To get a key for the new brand, select it in the dashboard and open Settings, then API Keys. See [pricing](https://nitrosend.com/pricing.md) for your plan's brand allowance.
+Open the dashboard's brand switcher and choose Add brand, then enter the website to build its Brand Kit. Once created, your agent can select the brand and configure its domain and sender. A brand API key can manage that brand, but cannot create or manage other brands. To get a key for the new brand, select it in the dashboard and open Settings, then API Keys. See [pricing](https://nitrosend.com/pricing.md) for your plan's brand allowance.
 
 ### Do I need a separate connection per client?
 One MCP connection can access the brands available to your login. Work on one client at a time across chats and scheduled agent tasks using the same login in the same agent app, and select and confirm the intended brand immediately before each task. A campaign already scheduled retains its own brand when you switch to another client.

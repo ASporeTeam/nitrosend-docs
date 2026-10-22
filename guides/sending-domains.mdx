@@ -1,36 +1,47 @@
 ---
 title: Sending Domains
-description: Prepare your reserved Nitrosend sender or connect a customer-owned sending subdomain
+description: Choose a Nitrosend address or connect your own sending domain
 ---
 
 # Sending Domains
 
-After Brand Kit setup, every brand permanently reserves one protected address:
-`hello@<brand-slug>.nitrosend.net`. The slug comes from the confirmed company
-name, never the account owner's name or a placeholder. Reservation creates no
-Domain or sending-identity row for a dormant account. Activation—or the first
-eligible API/MCP send—materializes those local rows synchronously under one
-already-verified shared SES root. There is no per-brand DNS, DKIM, provider
-identity, tenant resource, background job, polling state, or `.com` fallback.
+You can send from a Nitrosend address such as
+`hello@your-brand.nitrosend.net`, or connect a domain you own. A Nitrosend address
+needs no DNS setup and does not use your custom-domain allowance.
 
-You can instead add a sending domain you own. Your email then goes out from
-**your** address on Nitrosend's infrastructure, and the reputation you build is
-portable with your domain. There's no separate email provider to wire up.
+## Use your Nitrosend address
 
-## Activate the Nitrosend sender
+Choose an address during setup and activate it. If you complete your Brand Kit
+first, Nitrosend can suggest a name from your company name. Activating an address
+does not send any email. An existing custom sender stays selected until you
+choose to replace it.
 
-1. Go to **Settings → Domains** ([app.nitrosend.com/my/settings/domains](https://app.nitrosend.com/my/settings/domains)).
-2. Review the reserved `<brand-slug>.nitrosend.net` address and choose
-   **Activate sender**.
-3. Nitrosend creates the local logical identity immediately. If the brand has
-   no selected sender, that same transaction selects it; an existing custom
-   sender remains selected until you explicitly replace it.
-4. Choose the visible local part, such as `hello`, whenever you select this
-   hosted identity.
+Under **Settings → Domains**, the **Nitrosend address** section appears below your
+custom domains. Select **Activate sender** if needed, or **Use this sender** to
+make it your default.
 
-Activation never queues or sends email and never calls a DNS or email provider.
-The reserved FQDN cannot be renamed in this release. A Nitrosend
-brand-subdomain sender also does not consume your customer-domain allowance.
+## Change your Nitrosend address
+
+In **Settings → Domains**, select **Change address name** under your Nitrosend
+address. You can also make this change from **Inbox → Manage inboxes**.
+For example, `hello@old-name.nitrosend.net` can become
+`hello@new-name.nitrosend.net`.
+
+The same inbox keeps its messages and attachments. Previous addresses keep
+receiving mail, and new replies use the new address. Past emails stay unchanged.
+Old names remain reserved to your brand, so another customer cannot claim them.
+System names and names that impersonate other businesses are unavailable.
+
+Address changes share your existing address allowance. You can claim at most two
+new names per brand per hour, including the first address. A campaign, flow or
+reply still using the address must finish or be updated before you change it.
+The new sender goes through the usual sending checks.
+
+For API clients, send `subdomain` and the current `brand_subdomain.fqdn` as
+`expected_fqdn` to `POST /v1/my/brands/{sid}/rename_hosted_sender`. An exact retry
+returns the same address. The response is the updated brand. The agent tool uses
+`nitro_manage_domains` with `operation: "rename_brand_subdomain"`, the same two
+parameters, and `confirm: true`.
 
 ## Add a sending subdomain
 

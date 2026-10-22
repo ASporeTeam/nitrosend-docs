@@ -3,10 +3,13 @@
   "private": true,
   "scripts": {
     "dev": "sourcey dev",
-    "prebuild": "node scripts/check-plan-shape-content.mjs",
+    "prebuild": "node scripts/check-plan-shape-content.mjs && node scripts/generate-cli-reference.mjs",
     "build": "npx sourcey build"
   },
   "dependencies": {
-    "sourcey": "^3.6.12"
+    "sourcey": "^3.8.3"
+  },
+  "devDependencies": {
+    "@nitrosend/cli": "0.3.9"
   }
 }

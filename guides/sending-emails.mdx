@@ -24,6 +24,7 @@ For receipts, password resets, and other triggered emails, use the API:
 curl -X POST https://api.nitrosend.com/v1/my/messages \
   -H "Authorization: Bearer nskey_live_..." \
   -H "Content-Type: application/json" \
+  -H "Idempotency-Key: receipt-order-123" \
   -d '{
     "channel": "email",
     "to": "user@example.com",
@@ -32,6 +33,8 @@ curl -X POST https://api.nitrosend.com/v1/my/messages \
     "body": "Thanks for your purchase"
   }'
 ```
+
+Every send needs an idempotency key, one per message: a retry with the same key and payload returns the original message instead of sending twice. A request without one returns `400 idempotency_key_required`.
 
 Links in transactional messages go straight to their destination. Nitrosend never rewrites them for click tracking, because they often carry sign-in, reset, or confirmation tokens. Open tracking still follows the brand setting in [Open and click tracking](#open-and-click-tracking).
 

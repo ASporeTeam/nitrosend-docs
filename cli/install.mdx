@@ -18,15 +18,15 @@ description: Install the Nitrosend CLI, sign in with OAuth or an API key, and co
 The CLI ships as `@nitrosend/cli` on npm. Install globally with your package manager of choice:
 
 <CodeGroup>
-```bash npm
+```bash title="npm"
 npm install -g @nitrosend/cli
 ```
 
-```bash pnpm
+```bash title="pnpm"
 pnpm add -g @nitrosend/cli
 ```
 
-```bash yarn
+```bash title="yarn"
 yarn global add @nitrosend/cli
 ```
 </CodeGroup>
@@ -73,6 +73,16 @@ nitrosend mcp tools list
 ```
 
 Environment variables take precedence over stored profiles, which makes the CLI safe to drop into a CI runner that injects secrets at job time.
+
+### Sign up without a browser
+
+An agent or script with no account yet can create one from the CLI (0.3.8 or later). The password is read from stdin, never from a flag:
+
+```bash
+printf '%s' "$PASSWORD" | nitrosend signup --email you@example.com --password-stdin
+```
+
+It creates the account, makes an API key for its brand, and stores that key as the profile, so the next command is already signed in. `--profile <name>` names the profile; `--utm-source`, `--utm-medium` and `--utm-campaign` record where the signup came from.
 
 <Tip>
   In `--non-interactive` or `--machine` mode, OAuth login is rejected — interactive auth would block the run. Use an API key or a pre-existing profile for those workflows.

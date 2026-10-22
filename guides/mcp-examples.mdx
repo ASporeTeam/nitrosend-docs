@@ -123,8 +123,11 @@ These examples show the full loop: what you say, what your AI calls, and what co
 **What happens next:** The AI reads the structured identity state and asks to
 activate the permanently reserved sender or connect a customer-owned domain. For
 the Nitrosend path it calls `nitro_manage_domains` with
-`operation: "prepare_brand_subdomain"`. That operation materializes the local
-identity synchronously and selects it only when no sender is already selected.
+`operation: "prepare_brand_subdomain"` and `params: { "subdomain": "<name>" }`,
+the name it chooses for `hello@<name>.nitrosend.net`. Without a subdomain the
+name derives from the company name and needs the complete Brand Kit. That
+operation materializes the local identity synchronously and selects it only
+when no sender is already selected.
 If another sender remains selected, the agent then calls
 `operation: "select_brand_subdomain"` explicitly. Activation retains no email
 and performs no provider work.
