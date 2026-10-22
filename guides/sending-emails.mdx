@@ -36,6 +36,11 @@ curl -X POST https://api.nitrosend.com/v1/my/messages \
 
 Every send needs an idempotency key, one per message: a retry with the same key and payload returns the original message instead of sending twice. A request without one returns `400 idempotency_key_required`.
 
+Where copies are supported, each distinct To, CC and BCC recipient counts toward
+email credits, your rolling 24-hour sending allowance and sending rates. A copy
+of every campaign email also uses one credit per copy. Duplicate addresses in
+the same email count once; BCC addresses remain private.
+
 Individual flow and transactional messages receive priority headroom ahead of
 campaigns when they share sending resources. This does not bypass content review,
 suppression or provider limits. Mail queued for pacing continues automatically;
