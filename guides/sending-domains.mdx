@@ -20,6 +20,16 @@ Under **Settings → Domains**, the **Nitrosend address** section appears below 
 custom domains. Select **Activate sender** if needed, or **Use this sender** to
 make it your default.
 
+The shared `nitrosend.net` sender is paced across the service at 20 recipients
+per second, with a 5-per-second share for each account across its brands.
+Small bursts are allowed. Individual flow and transactional messages receive
+priority headroom ahead of campaigns. Queued mail continues automatically;
+these rates are separate from your plan's rolling 24-hour allowance.
+
+For sustained campaign volume, connect your own sending subdomain. It does
+not use the shared-domain rate pool; your plan allowance and other provider
+and safety limits still apply. Upgrading alone does not remove shared-domain pacing.
+
 ## Change your Nitrosend address
 
 In **Settings → Domains**, select **Change address name** under your Nitrosend

@@ -36,6 +36,13 @@ curl -X POST https://api.nitrosend.com/v1/my/messages \
 
 Every send needs an idempotency key, one per message: a retry with the same key and payload returns the original message instead of sending twice. A request without one returns `400 idempotency_key_required`.
 
+Individual flow and transactional messages receive priority headroom ahead of
+campaigns when they share sending resources. This does not bypass content review,
+suppression or provider limits. Mail queued for pacing continues automatically;
+do not submit it again with another idempotency key. The delivery-status response
+reports pacing separately from your plan allowance. See
+[shared sender rates](/guides/sending-domains#use-your-nitrosend-address).
+
 Links in transactional messages go straight to their destination. Nitrosend never rewrites them for click tracking, because they often carry sign-in, reset, or confirmation tokens. Open tracking still follows the brand setting in [Open and click tracking](#open-and-click-tracking).
 
 ## Email editor
