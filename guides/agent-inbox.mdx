@@ -29,6 +29,17 @@ Over REST, send `PATCH /v1/my/inboxes/{id}` with
 to 255 characters; control characters are rejected. A blank or `null` value
 clears the custom name.
 
+## Change your Nitrosend address
+
+Open **Inbox → Manage inboxes** and choose your Nitrosend address. You can edit
+the part before `@`, or select **Change address name** to change your brand's part
+of the domain. Both changes keep the same inbox and history. Old addresses keep
+receiving mail; replies to a previous domain use the new address.
+
+To change the name recipients see, edit **Sender name** separately. Past messages
+keep their original sender name and address. See [Sending Domains](/guides/sending-domains#change-your-nitrosend-address)
+for address-change limits and API access.
+
 ## Add aliases
 
 Open **Inbox**, click **Manage inboxes**, and choose your domain. Under **Addresses**, add an alias such as `ask@`. Mail to the alias lands in the same queue, and replies go out from whichever address each customer wrote to. **Make main** sets the address new messages start from; the previous main address stays as an alias.
